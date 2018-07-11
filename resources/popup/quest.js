@@ -37,6 +37,7 @@
     		
 			$('a').click(function (event) {
 				event.preventDefault();
+				$(this).hide();
 				window.open("index.html?va="+(--count)+"&ans="+myRnd, "popupWindow"+(--count), "width=600, height=400, scrollbars=yes");
 			});
     	})
