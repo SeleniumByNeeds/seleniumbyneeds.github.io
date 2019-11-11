@@ -1,10 +1,23 @@
 var filtersData ={};
 var selections = [];
-
+var temp="";
 var fullData;
+var rnd_ = ""+Date.now();
 $(document).ready(function(){
+	var docHeight = $(document).height();
+	$("body").append("<div id='overlay' class='text-center my-auto'><div style='position:relative;top:50%' class='spinner-grow text-primary m-5 spinner-grow-lg' role='status' ><span class='sr-only'>Loading...</span></div></div>");
+	$("#overlay")
+	   .height(docHeight)
+	   .css({
+		  'opacity' : 0.4,
+		  'position': 'absolute',
+		  'top': 0,
+		  'left': 0,
+		  'background-color': 'black',
+		  'width': '100%',
+		  'z-index': 5000
+	});
 	$.getJSON("./resources/data.json?t="+Date.now(),
-		
 		function(data){
 			fullData = data.employess;
 			Object.keys(fullData[0]).forEach(element => {
@@ -13,15 +26,19 @@ $(document).ready(function(){
 					$('#selDetails').append(new Option(optionText, element))
 					filtersData[element] = new Set(data.employess.map(x => x[element]).sort());
 				}
-			})
+			});
+			$("#overlay").css("display","none");
 		});
 
 	$('#selDetails').change(function(){
-		updateFilterPan($(this).val());
-		if(selections.length>0)
+		$("#overlay").css("display","block");
+		temp = $(this).val()
+		setTimeout(function(){updateFilterPan(temp);
+			if(selections.length>0)
 			$('#btnGen').prop( "disabled", false );
 		else
-			$('#btnGen').prop( "disabled", false );
+			$('#btnGen').prop( "disabled", true );
+		},getRandomInt(1000,10000));
 	})
 
 	$('#btnGen').click(function(e){
@@ -29,15 +46,12 @@ $(document).ready(function(){
 		var filteredData = "?fltlist=";
 		var fltString="";
 		$('.cfilter select').each(function(index){
-			
 			var colname = $(this).attr("id").replace("flt","");
 			filteredData +=colname + ",";
 			fltString += (colname + "=" + $(this).val().join(",") + "&");
 		})
 		filteredData += ("&" + fltString);
-
-		window.open("./report.html" + filteredData , "popupWindow", "width=800,resizable=false,height=650,scrollbars=yes");
-
+		setTimeout(function(){window.open("./report.html" + filteredData , "popupWindow", "width=800,resizable=false,height=650,scrollbars=yes")},getRandomInt(1000,3000));
 	})
 })
 
@@ -47,6 +61,7 @@ function updateFilterPan(filters){
 			selections.push(element);
 			addFilter(element);
 		}
+		$("#overlay").css("display","none");
 	});
 	var t = selections.length;
 	for(var i=0;i<t;i++){
@@ -82,4 +97,10 @@ function addFilter(strFilterName){
 function removeFilter(strFilterName){
 	var strFilterName_ = 'fltr'+strFilterName.replace(' ','_').toLowerCase()
 	$(document.getElementById(strFilterName_)).remove();
+}
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
