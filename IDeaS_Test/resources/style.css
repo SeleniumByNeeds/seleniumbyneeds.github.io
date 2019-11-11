@@ -3,3 +3,7 @@ header h1{
 	color: #0088CE;
 	text-shadow: aqua 0 2px !important;
 }
+
+#selDetails option, label, th {
+	text-transform: capitalize!important ;    
+}

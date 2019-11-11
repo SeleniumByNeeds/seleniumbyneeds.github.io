@@ -4,14 +4,16 @@ var selections = [];
 var fullData;
 $(document).ready(function(){
 	$.getJSON("./resources/data.json?t="+Date.now(),
-	    function(data){
+		
+		function(data){
 			fullData = data.employess;
-			filtersData.department =  new Set(data.employess.map(x => x.department).sort());
-			filtersData.designation =  new Set(data.employess.map(x => x.designation).sort());
-			filtersData.region =  new Set(data.employess.map(x => x.region).sort());
-			filtersData.sallery_band =  new Set(data.employess.map(x => x.sallery_band).sort());
-			filtersData.ratting =  new Set(data.employess.map(x => x.ratting).sort());
-			//debugger
+			Object.keys(fullData[0]).forEach(element => {
+				if(element.indexOf("_")!=0){
+					var optionText = element.replace("_"," ")
+					$('#selDetails').append(new Option(optionText, element))
+					filtersData[element] = new Set(data.employess.map(x => x[element]).sort());
+				}
+			})
 		});
 
 	$('#selDetails').change(function(){
@@ -31,8 +33,6 @@ $(document).ready(function(){
 			var colname = $(this).attr("id").replace("flt","");
 			filteredData +=colname + ",";
 			fltString += (colname + "=" + $(this).val().join(",") + "&");
-			//debugger
-			//filteredData = filteredData.filter( x => $(this).val().includes(x[colname]));
 		})
 		filteredData += ("&" + fltString);
 
@@ -75,7 +75,7 @@ function addFilter(strFilterName){
 		optList += '<option selected>'+element+'</option>';
 	})
 	optList += '</select>'
-	$(".cfilter").append('<div class="col-md-4" id="fltr'+strFilterName_+'"><label for="flt'+strFilterName_+'">'+strFilterName+':</label>'+optList+'</div>');
+	$(".cfilter").append('<div class="col-md-4" id="fltr'+strFilterName_+'"><label for="flt'+strFilterName_+'">'+strFilterName.replace("_"," ")+':</label>'+optList+'</div>');
 
 }
 

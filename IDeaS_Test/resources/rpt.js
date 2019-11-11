@@ -1,6 +1,7 @@
+var tbl;
+var filteredData;
+var columns=[];
 $(document).ready(function(){
-	var tbl;
-	var filteredData;
 	$.urlParam = function (name) {
 		var results = new RegExp('[\?&]' + name + '=([^&#]*)')
 						  .exec(window.location.search);
@@ -9,22 +10,27 @@ $(document).ready(function(){
 	$.getJSON("./resources/data.json?t="+Date.now(),
 	    function(data){
 			filteredData = data.employess;
+			var dm;
+			Object.keys(filteredData[0]).forEach(key => {
+				var col = {};
+				col.data = key;
+				col.title = key.replace("_"," ").trim()
+				columns.push(col);
+				dm = Object.assign({},col); //important
+			})
+			dm.title="S.No";
+			columns.splice(0,0,dm)
+			
 			var filters = $.urlParam("fltlist").split(",");
 			for(var i =0;i<filters.length-1;i++){
 				console.log($.urlParam(filters[i]))
 				var ref_ = $.urlParam(filters[i]).split(",")
-				filteredData = filteredData.filter(x => ref_.includes(x[filters[i]]))
+				filteredData = filteredData.filter(x => ref_.includes(x[filters[i]].toString()))
+				
 			}
 			tbl = $("#rpt").DataTable({
 				"data":filteredData,
-				"columns":[
-					{"data":"ratting"},
-					{"title": "Name","data":"name"},
-					{"title":"Department","data":"department"},
-					{"title":"Region","data":"region"},
-					{"title":"Sallery Band","data":"sallery_band"},
-					{"title":"Ratting","data":"ratting"}
-				],
+				"columns":columns,
 				"columnDefs": [ {
 					"searchable": false,
 					"orderable": false,
