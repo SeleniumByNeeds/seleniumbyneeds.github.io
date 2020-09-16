@@ -10,23 +10,24 @@
 						$('body').fireworks();
 					});
 				}else{
-				$("#nxa").html("<div class='alert alert-info'>Previous question's answer is: <strong>"+getQuest()[parseInt(getUrlVars()["ans"])].answer+"</strong></div>");
+				$("#nxa").html("<div class='alert alert-info'><i class='fa fa-info-circle'></i> Previous question's answer is: <strong>"+getQuest()[parseInt(getUrlVars()["ans"])].answer+"</strong></div>");
 				}
 			}
 			else{
-				$("#nxa").html("<div class='alert alert-danger alert-dismissible fade show'>Answer is not correct!</div>");
+				$("#nxa").html("<div class='alert alert-danger alert-dismissible fade show'><i class='fa fa-exclamation-circle'></i> Answer is not correct!</div>");
 			}
 		}
 		
     	$(function() {
 			
 			if(typeof getUrlVars()["ans"] === 'undefined'){
-			 //alert(1);
+			 myRnd =  parseInt(getRandomArbitrary(0,10));
 			}else{
+				myRnd = parseInt(getUrlVars()["ans"])==9?0:parseInt(getUrlVars()["ans"])+1
 				$('button').text("Fill correct answer & Get answer for previous question ")
 			}
 			
-			myRnd =  parseInt(getRandomArbitrary(0,10));
+			//myRnd =  parseInt(getRandomArbitrary(0,10));
 			que = getQuest()[myRnd].question;
 			ans = getQuest()[myRnd].answer;
 			var count = parseInt(getUrlVars()["va"]);
@@ -66,7 +67,6 @@ function getQuest(){
 	'{"question":"The number of already named bones in the human skeleton is","answer":"206"},' +
 	'{"question":"What Galileo invented?","answer":"Thermometer"}' +
 	']';
-	debugger;
 	var object = JSON.parse(text);
 	return object;
 }
