@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <!--
-  ~ Copyright (c) 2015. Kirtesh Wani (Selenium By Needs)
+  ~ Copyright (c) 2020. Kirtesh Wani (Selenium By Needs)
   ~ http://www.seleniumbyneeds.blogspot.com
   -->
 
-<html>
+<html lang="en">
     <head>
-        <title>Selenium By Needs [Login Example]</title>
+        <title>Selenium By Needs [Popup Example]</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" type="text/css" href="../common/style.css" />
-        <script type="text/javascript" src="../common/jquery.min.js"> </script>
-         <script type="text/javascript" src="../common/corner.js"> </script>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+		<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 		 <script type="text/javascript" src="../common/common.js"> </script>
          <script type="text/javascript" src="quest.js"> </script>
                   <!-- Hotjar Tracking Code for seleniumbyneeds.github.io -->
@@ -23,21 +33,44 @@
                 r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
                 a.appendChild(r);
             })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+			$(document).ready(function(){
+			  $('[data-toggle="tooltip"]').tooltip();
+			});
         </script>
-
+		<style>
+			body,html {
+				height: 100%;
+			}
+		</style>
     </head>
     <body>
-        <h1>Selenium By Needs [Switch Window Example]</h1>
-		<div id='kount'>
-		</div>
-		<div id='mq'>
 		
-		</div>
-        <div id="form-example" class="example">
-			<input id="ans"/>&nbsp;&nbsp;&nbsp;<a href="#">Click Me for Answer</a><br/><br/><br/>
-			<button onclick="validateAnswer()">Validate Answer to generate last page Answer</button>
-        </div>
-        <div id="nxa">
+		<div class="container-fluid h-100">
+			<div class="row justify-content-center align-items-center h-100">
+				<div class="col col-sm-10 col-md-8 col-lg-6 col-xl-6 shadow-lg p-3 mb-15 bg-white rounded">
+					
+					<div id='kount'>
+					</div>
+					<div id='mq'>
+					
+					</div>
+					<div id="form-example" class="example">
+					<div class="input-group mb-3">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fa fa-pen-fancy"></i></span>
+						</div>
+						<input type="text" id="ans" class="form-control"/>
+						<div class="input-group-append">
+						<a title="Click me for answer!!!" data-toggle="tooltip" class="input-group-text" href="#"><i class="fas fa-angle-double-right"></i></a>
+						</div>
+					</div><br/>
+						<button onclick="validateAnswer()" class="btn btn-primary">Validate Answer</button>
+					</div>
+					<div style="height:50px" id="nxa">
+					</div>
+					<div class="small text-right"><i class="fa fa-copyright"></i> Selenium By Needs</div>
+				</div>
+			</div>
 		</div>
     </body>
 </html>
