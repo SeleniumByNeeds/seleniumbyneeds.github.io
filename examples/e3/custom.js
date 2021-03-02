@@ -31,7 +31,20 @@
                 }
             });
             var val = _input.value.toLowerCase();
-            row.style.display = text.indexOf(val) === -1 ? 'none' : 'table-row';
+            
+            if(text.indexOf(val) === -1){
+                row.style.display =  'none';
+            }
+            else{
+                row.style.display =  'table-row';
+                if(text.indexOf('c')>=0){
+                    row.cells[3].textContent = row.cells[3].textContent.toLowerCase();
+                }
+            }
+            
+            if(val==''){
+                row.cells[3].textContent = row.cells[3].textContent.toUpperCase();
+            }
         }
 
         return {
