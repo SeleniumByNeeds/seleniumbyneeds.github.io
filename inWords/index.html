@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>toWords</title>
+
+</head>
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+		font-family: 'Poppins', sans-serif;
+	}
+
+	.container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		min-height: 100vh;
+		background: #161623;
+		flex-direction: column;
+
+	}
+
+	.container2 {
+		justify-content: center;
+		align-items: center;
+		max-width: 100vw;
+		padding: 10px 10px 10px 10px;
+	}
+
+	h2 {
+		color: azure;
+	}
+</style>
+
+<body>
+	<div class="container">
+		<div class="container2">
+			<input onkeyup="getWords()" placeholder="Enter number!" type="number" id="amt">
+		</div>
+		<div class="container2">
+			<h2 id="txt">&nbsp;</h2>
+		</div>
+	</div>
+	<script>
+
+		function getWords() {
+			document.getElementById("txt").innerHTML = toWords(document.getElementById("amt").value)
+		}
+
+		function toWords(amt) {
+			if (amt >= 1000000000)
+				return "Too big number!!!"
+			const den = ["Hundred", "Thosand", "Lakh", "Crore"]
+			var rupia = parseInt(amt)
+			var paisa = parseInt((amt - rupia).toFixed(2) * 100)
+			var tens = parseInt(amt % 100)
+			var dv = 1000000000
+			var inWord = ""
+			for (var i = 4; i >= 1; i--) {
+				var tm = parseInt(((amt % dv) / (i > 1 ? dv /= 100 : 100)).toFixed(2))
+				inWord += getUpto99(tm, i)
+			}
+			inWord = inWord.trim()
+			inWord += ` ${getUpto99(tens)} Rupees ${paisa > 0 ? (", and " + getUpto99(paisa, 5)) : ""}`
+			return inWord.trim()
+		}
+
+		function getUpto99(num, index = 0) {
+			const teens = ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Ninteen"]
+			const modTen = ["Twenty", "Thirty", "Fourty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninty"]
+			const den = ["", "Hundred", "Thosand", "Lakh", "Crore", "Paisa"]
+
+			if (num <= 0)
+				return "";
+			if (num < 20) {
+				return `${teens[num - 1]} ${den[index]} `
+			} else {
+				return `${modTen[parseInt((num / 10)) - 2]}${getUpto99(parseInt(num % 10)).toLowerCase()} ${den[index]} `
+			}
+		}
+	</script>
+</body>
+
+</html>
