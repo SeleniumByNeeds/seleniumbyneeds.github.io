@@ -56,6 +56,7 @@
 		}
 
 		function toWords(amt) {
+			amt = amt ? amt : 0
 			if (amt >= 1000000000)
 				return "Too big number!!!"
 			const den = ["Hundred", "Thosand", "Lakh", "Crore"]
@@ -69,8 +70,10 @@
 				inWord += getUpto99(tm, i)
 			}
 			inWord = inWord.trim()
-			inWord += ` ${getUpto99(tens)} Rupees ${paisa > 0 ? (", and " + getUpto99(paisa, 5)) : ""}`
-			return inWord.trim()
+			inWord += ` ${getUpto99(tens)}`
+			const strRs = inWord.trim() == "" ? "" : (inWord.trim() + " Rupees")
+			const strPais = getUpto99(paisa, 5).trim()
+			return (strRs + ((strRs != "" && strPais != "") ? ", and " : "") + strPais)
 		}
 
 		function getUpto99(num, index = 0) {
