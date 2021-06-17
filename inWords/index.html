@@ -59,14 +59,13 @@
 			amt = amt ? amt : 0
 			if (amt >= 1000000000)
 				return "Too big number!!!"
-			const den = ["Hundred", "Thosand", "Lakh", "Crore"]
 			var rupia = parseInt(amt)
 			var paisa = parseInt((amt - rupia).toFixed(2) * 100)
 			var tens = parseInt(amt % 100)
 			var dv = 1000000000
 			var inWord = ""
 			for (var i = 4; i >= 1; i--) {
-				var tm = parseInt(((amt % dv) / (i > 1 ? dv /= 100 : 100)).toFixed(2))
+				var tm = parseInt(((amt % dv) / (i > 1 ? dv /= 100 : 100)).toFixed(9))
 				inWord += getUpto99(tm, i)
 			}
 			inWord = inWord.trim()
