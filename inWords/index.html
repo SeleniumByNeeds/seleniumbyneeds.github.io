@@ -43,7 +43,7 @@
 <body>
 	<div class="container">
 		<div class="container2">
-			<input onkeyup="getWords()" placeholder="Enter number!" type="number" id="amt">
+			<input oninput="getWords()" placeholder="Enter number!" type="number" id="amt">
 		</div>
 		<div class="container2">
 			<h2 id="txt">&nbsp;</h2>
@@ -62,6 +62,10 @@
 				return "Too big number!!!"
 			var rupia = parseInt(amt)
 			var paisa = parseInt((amt - rupia).toFixed(2) * 100)
+			if (paisa >= 100) {
+				amt = parseInt(amt) + 1;
+				paisa = 0
+			}
 			var tens = parseInt(amt % 100)
 			var dv = 1000000000
 			var inWord = ""
