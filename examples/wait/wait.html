@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Dynamic Wait</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+	<style>
+		.overflow {
+			height: 200px;
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<div class="jumbotron text-center">
+			<h1>Dynamic Loading Elements</h1>
+			
+		</div>
+	</header>
+	<content>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col col-3">
+					<div class="card">
+						<div class="card-header"><h4>Dynamic Options</h4></div>
+						<div class="form-group">
+							<label for="countries">Select Country</label>
+							<div class="form-control">
+								<select id="countries">
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="states">Select State</label>
+							<div class="form-control">
+								<select class="form-control" id="states">
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col col-3">
+					<div class="card processData">
+						<div class="card-header">
+							<h4>Process Data</h4>
+						</div>
+						<div id="dialog" title="Process Data">
+							<div class="progress-label">Starting Processing...</div>
+							<div id="progressbar"></div>
+						  </div>
+						  <button id="downloadButton">Start Processing</button>
+						  <table class='table table-striped'><thead><tr><th>Code</th><th>Translation</th></tr></thead><tbody></tbody></table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</content>
+	<script>
+		$(document).ready(function(){
+			$('#countries').selectmenu({
+				change:function(event,data){
+					initStates(data.item.value)
+				}
+			}).selectmenu( "menuWidget" ).addClass( "overflow" );;
+			$('#states').selectmenu().selectmenu( "menuWidget" ).addClass( "overflow" );;
+			let allContries;
+			let countryState;
+			let countryTranslations;
+			let myStates;
+			initCountries();
+			function initCountries(){
+				$.ajax({
+				url:'./resources/countries.json',
+				success:function(data){
+					allContries = data;
+					addCountries(0);
+					}
+				})
+				$.ajax({
+				url:'./resources/country-state.json',
+				success:function(data){
+					countryState = data;
+					}
+				})
+			}
+
+			function addCountries(index){
+				try{
+					setTimeout(()=>{
+							$('#countries').append('<option value="'+allContries[index].name+'">'+allContries[index].name+'</option>')
+							$('#countries').selectmenu('refresh')
+							addCountries(++index)
+						},5)
+					
+				}catch(e){
+
+				}
+			}
+
+			function initStates(strCountry){
+				countryTranslations = countryState.filter(a => a.name==strCountry)[0].translations
+				myStates = countryState.filter(a => a.name==strCountry)[0].states;
+				$('#states')
+					.find('option')
+					.remove();
+				$('#states').selectmenu('refresh')
+				addStates(0);
+			}
+			function addStates(index){
+				try{
+					setTimeout(()=>{
+							$('#states').append('<option value="'+myStates[index].name+'">'+myStates[index].name+'</option>')
+							$('#states').selectmenu('refresh')
+							addStates(++index)
+						},Math.floor((Math.random() * 500) + 1))
+					
+				}catch(e){
+
+				}
+			}
+
+
+			var progressTimer,
+      progressbar = $( "#progressbar" ),
+      progressLabel = $( ".progress-label" ),
+      dialogButtons = [{
+        text: "Cancel Processing",
+        click: closeDownload
+      }],
+      dialog = $( "#dialog" ).dialog({
+        autoOpen: false,
+        closeOnEscape: false,
+        resizable: false,
+        buttons: dialogButtons,
+        open: function() {
+          progressTimer = setTimeout( progress, 1000 );
+        },
+        beforeClose: function() {
+          downloadButton.button( "option", {
+            disabled: false,
+            label: "Start Processing"
+          });
+        }
+      }),
+      downloadButton = $( "#downloadButton" )
+        .button()
+        .on( "click", function() {
+          $( this ).button( "option", {
+            disabled: true,
+            label: "Processing..."
+          });
+          dialog.dialog( "open" );
+		  $('.processData tbody').empty()
+        });
+ 
+    progressbar.progressbar({
+      value: false,
+      change: function() {
+        progressLabel.text( "Current Progress: " + progressbar.progressbar( "value" ) + "%" );
+      },
+      complete: function() {
+        progressLabel.text( "Complete!" );
+        dialog.dialog( "option", "buttons", [{
+          text: "Close",
+          click: closeDownload
+        }]);
+        $(".ui-dialog button").last().trigger( "focus" );
+      }
+    });
+ 
+    function progress() {
+      var val = progressbar.progressbar( "value" ) || 0;
+       progressbar.progressbar( "value", val + Math.floor( Math.random() * 3 ) );
+       if ( val <= 99 ) {
+        progressTimer = setTimeout( progress, Math.floor((Math.random() * 500) + 1) );
+      }else{
+		processData();
+	  }
+    }
+ 
+	function processData(){
+		let strTbl = ""
+
+			Object.keys(countryTranslations).forEach( elem => {
+				strTbl += "<tr><td>"+elem+"</td><td>"+countryTranslations[elem]+"</td></tr>"
+			}
+			)
+			
+			//strTbl += "</tbody></table>";
+		$('.processData tbody').append(strTbl)
+	}
+    function closeDownload() {
+      clearTimeout( progressTimer );
+      dialog
+        .dialog( "option", "buttons", dialogButtons )
+        .dialog( "close" );
+      progressbar.progressbar( "value", false );
+      progressLabel
+        .text( "Starting Processing..." );
+      downloadButton.trigger( "focus" );
+    }
+
+})
+  </script>
+  <style>
+  #progressbar {
+    margin-top: 20px;
+  }
+ 
+  .progress-label {
+    font-weight: bold;
+    text-shadow: 1px 1px 0 #fff;
+  }
+ 
+  .ui-dialog-titlebar-close {
+    display: none;
+  }
+	
+
+		
+</style>
+</body>
+</html>
